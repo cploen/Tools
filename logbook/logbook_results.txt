@@ -1,0 +1,100 @@
+4308790 - https://logbooks.jlab.org//entry/4308790
+COIN_NPS Start_Run_7022,Run_type=Cosmics,target_type=Out of Beam,coda_ps=ps2=0,comment_text=cosmic ray studies, out of beam,shms_theta=36.47, - https://logbooks.jlab.org//entry/4308790
+4308741 - https://logbooks.jlab.org//entry/4308741
+COIN_NPS Start_Run_7021,Run_type=Cosmics,target_type=Out of Beam,coda_ps=ps2=0,comment_text=cosmic ray studies, out of beam,shms_theta=36.47, - https://logbooks.jlab.org//entry/4308741
+4308673 - https://logbooks.jlab.org//entry/4308673
+COIN_NPS Start_Run_7020,Run_type=Cosmics,target_type=Out of Beam,coda_ps=ps2=0,comment_text=cosmic ray studies, out of beam,shms_theta=36.47, - https://logbooks.jlab.org//entry/4308673
+4308599 - https://logbooks.jlab.org//entry/4308599
+COIN_NPS Start_Run_7019,Run_type=Cosmics,target_type=Out of Beam,coda_ps=ps2=0,comment_text=cosmic ray studies, out of beam,shms_theta=36.47, - https://logbooks.jlab.org//entry/4308599
+4308476 - https://logbooks.jlab.org//entry/4308476
+COIN_NPS Start_Run_7018,Run_type=Cosmics,target_type=Out of Beam,coda_ps=ps2=0,comment_text=cosmic ray studies, out of beam,shms_theta=36.47, - https://logbooks.jlab.org//entry/4308476
+4308356 - https://logbooks.jlab.org//entry/4308356
+COIN_NPS Start_Run_7016,Run_type=Junk,target_type=LD2 10cm,coda_ps=ps2=0,comment_text=Junk run,shms_theta=36.47, - https://logbooks.jlab.org//entry/4308356
+4308099 - https://logbooks.jlab.org//entry/4308099
+COIN_NPS Start_Run_7015,Run_type=LED,target_type=Home,coda_ps=ps2=0,comment_text=KinC_x60_3, coin_sparse, ps2=0, 0uA, hms_theta=16.48, shms_theta=36.47,shms_theta=36.47, - https://logbooks.jlab.org//entry/4308099
+4308081 - https://logbooks.jlab.org//entry/4308081
+COIN_NPS Start_Run_7014,Run_type=LED,target_type=Home,coda_ps=ps2=0,comment_text=KinC_x60_3, coin_sparse, ps2=0, 0uA, hms_theta=16.48, shms_theta=36.47,shms_theta=36.47, - https://logbooks.jlab.org//entry/4308081
+4308062 - https://logbooks.jlab.org//entry/4308062
+COIN_NPS Start_Run_7013,Run_type=LED,target_type=Home,coda_ps=ps2=0,comment_text=KinC_x60_3, coin_sparse, ps2=0, 0uA, hms_theta=16.48, shms_theta=36.47,shms_theta=36.47, - https://logbooks.jlab.org//entry/4308062
+4307947 - https://logbooks.jlab.org//entry/4307947
+COIN_NPS Start_Run_7012,Run_type=Production,target_type=LD2 10cm,coda_ps=ps4=0,comment_text=KinC_x60_3, coin_sparse, ps4=0, 20uA, hms_theta=16.48, shms_theta=36.47,shms_theta=36.47, - https://logbooks.jlab.org//entry/4307947
+4307941 - https://logbooks.jlab.org//entry/4307941
+COIN_NPS Start_Run_7011,Run_type=Production,target_type=LD2 10cm,coda_ps=ps4=0,comment_text=KinC_x60_3, coin_sparse, ps4=0, 20uA, hms_theta=16.48, shms_theta=36.47,shms_theta=36.47, - https://logbooks.jlab.org//entry/4307941
+4307929 - https://logbooks.jlab.org//entry/4307929
+COIN_NPS Start_Run_7010,Run_type=Production,target_type=LD2 10cm,coda_ps=ps4=0,comment_text=KinC_x60_3, coin_sparse, ps4=0, 20uA, hms_theta=16.48, shms_theta=36.47,shms_theta=36.47, - https://logbooks.jlab.org//entry/4307929
+4307894 - https://logbooks.jlab.org//entry/4307894
+COIN_NPS Start_Run_7009,Run_type=Production,target_type=10cm Dummy,coda_ps=ps4=0,comment_text=KinC_x60_3, coin_sparse, ps4=0, 20uA, hms_theta=16.48, shms_theta=36.47,shms_theta=36.47, - https://logbooks.jlab.org//entry/4307894
+4307868 - https://logbooks.jlab.org//entry/4307868
+COIN_NPS Start_Run_7008,Run_type=Optics,target_type=Optics 2 +/- 3cm,coda_ps=ps4=0,comment_text=KinC_x60_3, coin_sparse, ps4=0, 30uA, hms_theta=16.48, shms_theta=36.47,shms_theta=36.47, - https://logbooks.jlab.org//entry/4307868
+4307839 - https://logbooks.jlab.org//entry/4307839
+COIN_NPS Start_Run_7007,Run_type=LumiScan,target_type=Carbon 0.5%,coda_ps=ps4=0,comment_text=KinC_x60_3, coin_sparse, ps4=0, 5uA, hms_theta=16.48, shms_theta=36.47,shms_theta=36.47, - https://logbooks.jlab.org//entry/4307839
+4307826 - https://logbooks.jlab.org//entry/4307826
+COIN_NPS Start_Run_7006,Run_type=LumiScan,target_type=Carbon 0.5%,coda_ps=ps4=0,comment_text=KinC_x60_3, coin_sparse, ps4=0, 10uA, hms_theta=16.48, shms_theta=36.47,shms_theta=36.47, - https://logbooks.jlab.org//entry/4307826
+4307810 - https://logbooks.jlab.org//entry/4307810
+COIN_NPS Start_Run_7005,Run_type=LumiScan,target_type=Carbon 0.5%,coda_ps=ps4=0,comment_text=KinC_x60_3, coin_sparse, ps4=0, 20uA, hms_theta=16.48, shms_theta=36.47,shms_theta=36.47, - https://logbooks.jlab.org//entry/4307810
+4307793 - https://logbooks.jlab.org//entry/4307793
+COIN_NPS Start_Run_7004,Run_type=LumiScan,target_type=Carbon 0.5%,coda_ps=ps4=0,comment_text=KinC_x60_3, coin_sparse, ps4=0, 30uA, hms_theta=16.48, shms_theta=36.47,shms_theta=36.47, - https://logbooks.jlab.org//entry/4307793
+4307786 - https://logbooks.jlab.org//entry/4307786
+COIN_NPS Start_Run_7003,Run_type=LumiScan,target_type=Carbon 0.5%,coda_ps=ps4=0,comment_text=KinC_x60_3, coin_sparse, ps4=0, 40uA, hms_theta=16.48, shms_theta=36.47,shms_theta=36.47, - https://logbooks.jlab.org//entry/4307786
+4307738 - https://logbooks.jlab.org//entry/4307738
+COIN_NPS Start_Run_7002,Run_type=Production,target_type=Loop 3 10cm,coda_ps=ps4=1,comment_text=KinC_x36_3, coin_sparse, ps4=1, 10uA, hms_theta=12.50, shms_theta=32.27,shms_theta=32.27, - https://logbooks.jlab.org//entry/4307738
+4307725 - https://logbooks.jlab.org//entry/4307725
+COIN_NPS Start_Run_7001,Run_type=Production,target_type=Loop 3 10cm,coda_ps=ps4=1,comment_text=KinC_x36_3, coin_sparse, ps4=1, 10uA, hms_theta=12.50, shms_theta=32.27,shms_theta=32.27, - https://logbooks.jlab.org//entry/4307725
+4307706 - https://logbooks.jlab.org//entry/4307706
+COIN_NPS Start_Run_7000,Run_type=Production,target_type=Loop 3 10cm,coda_ps=ps4=1,comment_text=KinC_x36_3, coin_sparse, ps4=1, 10uA, hms_theta=12.50, shms_theta=32.27,shms_theta=32.27, - https://logbooks.jlab.org//entry/4307706
+4307678 - https://logbooks.jlab.org//entry/4307678
+COIN_NPS Start_Run_6999,Run_type=Production,target_type=LD2 10cm,coda_ps=ps4=1,comment_text=KinC_x36_3, coin_sparse, ps4=1, 5uA, hms_theta=12.50, shms_theta=32.27,shms_theta=32.27, - https://logbooks.jlab.org//entry/4307678
+4307669 - https://logbooks.jlab.org//entry/4307669
+COIN_NPS Start_Run_6998,Run_type=Production,target_type=LD2 10cm,coda_ps=ps4=1,comment_text=KinC_x36_3, coin_sparse, ps4=1, 5uA, hms_theta=12.50, shms_theta=32.27,shms_theta=32.27, - https://logbooks.jlab.org//entry/4307669
+4307663 - https://logbooks.jlab.org//entry/4307663
+COIN_NPS Start_Run_6997,Run_type=Production,target_type=LD2 10cm,coda_ps=ps4=1,comment_text=KinC_x36_3, coin_sparse, ps4=1, 5uA, hms_theta=12.50, shms_theta=32.27,shms_theta=32.27, - https://logbooks.jlab.org//entry/4307663
+4307630 - https://logbooks.jlab.org//entry/4307630
+COIN_NPS Start_Run_6996,Run_type=Production,target_type=10cm Dummy,coda_ps=ps4=0,comment_text=KinC_x36_3, coin_sparse, ps4=0, 5uA, hms_theta=12.50, shms_theta=32.27,shms_theta=32.27, - https://logbooks.jlab.org//entry/4307630
+4307618 - https://logbooks.jlab.org//entry/4307618
+COIN_NPS Start_Run_6995,Run_type=Production,target_type=Carbon 0.5%,coda_ps=ps4=0,comment_text=KinC_x36_3, coin_sparse, ps4=0, 5uA, hms_theta=12.50, shms_theta=32.27,shms_theta=32.27, - https://logbooks.jlab.org//entry/4307618
+4307612 - https://logbooks.jlab.org//entry/4307612
+COIN_NPS Start_Run_6994,Run_type=Production,target_type=Carbon 0.5%,coda_ps=ps4=0,comment_text=KinC_x36_3, coin_sparse, ps4=0, 10uA, hms_theta=12.50, shms_theta=32.27,shms_theta=32.27, - https://logbooks.jlab.org//entry/4307612
+4307608 - https://logbooks.jlab.org//entry/4307608
+COIN_NPS Start_Run_6993,Run_type=Production,target_type=Carbon 0.5%,coda_ps=ps4=1,comment_text=KinC_x36_3, coin_sparse, ps4=1, 10uA, hms_theta=12.50, shms_theta=32.27,shms_theta=32.27, - https://logbooks.jlab.org//entry/4307608
+4307585 - https://logbooks.jlab.org//entry/4307585
+COIN_NPS Start_Run_6992,Run_type=Production,target_type=Loop 3 10cm,coda_ps=ps4=1,comment_text=KinC_x36_3, coin_sparse, ps4=1, 10uA, hms_theta=12.50, shms_theta=32.27,shms_theta=32.27, - https://logbooks.jlab.org//entry/4307585
+4307573 - https://logbooks.jlab.org//entry/4307573
+COIN_NPS Start_Run_6991,Run_type=Production,target_type=Loop 3 10cm,coda_ps=ps4=1,comment_text=KinC_x36_3, coin_sparse, ps4=1, 10uA, hms_theta=12.50, shms_theta=32.27,shms_theta=32.27, - https://logbooks.jlab.org//entry/4307573
+4307561 - https://logbooks.jlab.org//entry/4307561
+COIN_NPS Start_Run_6990,Run_type=Production,target_type=Loop 3 10cm,coda_ps=ps4=1,comment_text=KinC_x36_3, coin_sparse, ps4=1, 10uA, hms_theta=12.50, shms_theta=32.27,shms_theta=32.27, - https://logbooks.jlab.org//entry/4307561
+4307535 - https://logbooks.jlab.org//entry/4307535
+COIN_NPS Start_Run_6989,Run_type=Production,target_type=LD2 10cm,coda_ps=ps4=1,comment_text=KinC_x36_3, coin_sparse, ps4=1, 5uA, hms_theta=12.50, shms_theta=32.27,shms_theta=32.27, - https://logbooks.jlab.org//entry/4307535
+4307518 - https://logbooks.jlab.org//entry/4307518
+COIN_NPS Start_Run_6988,Run_type=Production,target_type=LD2 10cm,coda_ps=ps4=1,comment_text=KinC_x36_3, coin_sparse, ps4=1, 5uA, hms_theta=12.50, shms_theta=32.27,shms_theta=32.27, - https://logbooks.jlab.org//entry/4307518
+4307485 - https://logbooks.jlab.org//entry/4307485
+COIN_NPS Start_Run_6987,Run_type=Production,target_type=LD2 10cm,coda_ps=ps4=1,comment_text=KinC_x36_3, coin_sparse, ps4=1, 5uA, hms_theta=12.50, shms_theta=32.27,shms_theta=32.27, - https://logbooks.jlab.org//entry/4307485
+4307461 - https://logbooks.jlab.org//entry/4307461
+COIN_NPS Start_Run_6986,Run_type=Production,target_type=10cm Dummy,coda_ps=ps4=0,comment_text=KinC_x36_3, coin_sparse, ps4=0, 5uA, hms_theta=12.50, shms_theta=32.27,shms_theta=32.27, - https://logbooks.jlab.org//entry/4307461
+4307433 - https://logbooks.jlab.org//entry/4307433
+COIN_NPS Start_Run_6985,Run_type=Optics,target_type=Optics 2 +/- 3cm,coda_ps=ps4=0,comment_text=KinC_x50_2, coin_sparse, ps4=0, 30uA, hms_theta=12.50, shms_theta=36.90,shms_theta=36.9, - https://logbooks.jlab.org//entry/4307433
+4307418 - https://logbooks.jlab.org//entry/4307418
+COIN_NPS Start_Run_6984,Run_type=Optics,target_type=Optics 1 +/- 8cm,coda_ps=ps4=0,comment_text=KinC_x50_2, coin_sparse, ps4=0, 30uA, hms_theta=12.50, shms_theta=36.90,shms_theta=36.9, - https://logbooks.jlab.org//entry/4307418
+4307400 - https://logbooks.jlab.org//entry/4307400
+COIN_NPS Start_Run_6983,Run_type=Optics,target_type=Optics 1 +/- 8cm,coda_ps=ps4=0,comment_text=KinC_x50_2, coin_sparse, ps4=0, 10uA, hms_theta=12.50, shms_theta=36.90,shms_theta=36.9, - https://logbooks.jlab.org//entry/4307400
+4307367 - https://logbooks.jlab.org//entry/4307367
+COIN_NPS Start_Run_6982,Run_type=Production,target_type=Carbon 0.5%,coda_ps=ps4=0,comment_text=KinC_x50_2, coin_sparse, ps4=1, 10uA, hms_theta=12.50, shms_theta=36.90,shms_theta=36.9, - https://logbooks.jlab.org//entry/4307367
+4307359 - https://logbooks.jlab.org//entry/4307359
+COIN_NPS Start_Run_6981,Run_type=Production,target_type=Carbon 0.5%,coda_ps=ps4=0,comment_text=KinC_x50_2, coin_sparse, ps4=1, 10uA, hms_theta=12.50, shms_theta=36.90,shms_theta=36.9, - https://logbooks.jlab.org//entry/4307359
+4307346 - https://logbooks.jlab.org//entry/4307346
+COIN_NPS Start_Run_6980,Run_type=Production,target_type=Loop 3 10cm,coda_ps=ps4=1,comment_text=KinC_x50_2, coin_sparse, ps4=1, 10uA, hms_theta=12.50, shms_theta=36.90,shms_theta=36.9, - https://logbooks.jlab.org//entry/4307346
+4307328 - https://logbooks.jlab.org//entry/4307328
+COIN_NPS Start_Run_6979,Run_type=Production,target_type=Loop 3 10cm,coda_ps=ps4=1,comment_text=KinC_x50_2, coin_sparse, ps4=1, 10uA, hms_theta=12.50, shms_theta=36.90,shms_theta=36.9, - https://logbooks.jlab.org//entry/4307328
+4307316 - https://logbooks.jlab.org//entry/4307316
+COIN_NPS Start_Run_6978,Run_type=Production,target_type=Loop 3 10cm,coda_ps=ps4=1,comment_text=KinC_x50_2, coin_sparse, ps4=1, 10uA, hms_theta=12.50, shms_theta=36.90,shms_theta=36.9, - https://logbooks.jlab.org//entry/4307316
+4307314 - https://logbooks.jlab.org//entry/4307314
+COIN_NPS Start_Run_6977,Run_type=Production,target_type=Loop 3 10cm,coda_ps=ps4=1,comment_text=KinC_x50_2, coin_sparse, ps4=1, 10uA, hms_theta=12.50, shms_theta=36.90,shms_theta=36.9, - https://logbooks.jlab.org//entry/4307314
+4307291 - https://logbooks.jlab.org//entry/4307291
+COIN_NPS Start_Run_6976,Run_type=Production,target_type=Loop 3 10cm,coda_ps=ps4=1,comment_text=KinC_x50_2, coin_sparse, ps4=1, 10uA, hms_theta=12.50, shms_theta=36.90,shms_theta=36.9, - https://logbooks.jlab.org//entry/4307291
+4307255 - https://logbooks.jlab.org//entry/4307255
+COIN_NPS Start_Run_6975,Run_type=Production,target_type=LD2 10cm,coda_ps=ps4=1,comment_text=KinC_x50_2, coin_sparse, ps4=1, 5uA, hms_theta=12.50, shms_theta=36.90,shms_theta=36.9, - https://logbooks.jlab.org//entry/4307255
+4307236 - https://logbooks.jlab.org//entry/4307236
+COIN_NPS Start_Run_6974,Run_type=Production,target_type=LD2 10cm,coda_ps=ps4=1,comment_text=KinC_x50_2, coin_sparse, ps4=1, 5uA, hms_theta=12.50, shms_theta=36.90,shms_theta=36.9, - https://logbooks.jlab.org//entry/4307236
+4307012 - https://logbooks.jlab.org//entry/4307012
+COIN_NPS Start_Run_6973,Run_type=Production,target_type=LD2 10cm,coda_ps=ps4=1,comment_text=KinC_x50_2, coin_vld, ps4=1, 5uA, hms_theta=12.50, shms_theta=36.90,shms_theta=36.9, - https://logbooks.jlab.org//entry/4307012
+4307008 - https://logbooks.jlab.org//entry/4307008
+COIN_NPS Start_Run_6972,Run_type=Production,target_type=LD2 10cm,coda_ps=ps4=1,comment_text=KinC_x50_2, coin_vld, ps2=0, 5uA, hms_theta=12.50, shms_theta=36.90,shms_theta=36.9, - https://logbooks.jlab.org//entry/4307008
