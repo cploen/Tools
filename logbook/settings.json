@@ -1,0 +1,10 @@
+{
+    "search_pattern": "50k\\d+",
+    "exclude_keywords": "",
+    "default_logbook": "84",
+    "default_search_term": "COIN_NPS Start_Run_",
+    "default_start_date": "2023-09-01",
+    "default_end_date": "2024-06-01",
+    "output_folder_format": "COIN_NPS_50k_replay_{run_number}",
+    "file_types": [".pdf"]
+}
