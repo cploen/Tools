@@ -1,1 +1,4 @@
-logbook/metadata_files
+logbook/metadata
+logbook/debug.log
+logbook/logbook_results.txt
+countHistograms.C

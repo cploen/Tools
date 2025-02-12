@@ -6,6 +6,7 @@ import urllib.parse
 import time
 import os
 import re
+import logging
 from bs4 import BeautifulSoup
 from datetime import datetime
 
@@ -16,10 +17,27 @@ BASE_URL = "https://logbooks.jlab.org/"
 LOGIN_URL = "https://logbooks.jlab.org/entries?destination=entries"
 SEARCH_URL = "https://logbooks.jlab.org/entries"
 
+# Set up logging configuration
+logging.basicConfig(
+    filename="debug.log",  # Log to a file
+    level=logging.DEBUG,  # Capture all debug messages
+    format="%(asctime)s - %(levelname)s - %(message)s",  # Include timestamp
+    datefmt="%Y-%m-%d %H:%M:%S"
+)
+
 # Parse command-line arguments
 parser = argparse.ArgumentParser()
 parser.add_argument("--quiet", action="store_true", help="Suppress terminal output and save results to a file only")
+parser.add_argument("--no-download", action="store_true", help="Skip file downloads")
+parser.add_argument("--debug", action="store_true", help="Enable debugging mode (includes detailed output and disables downloads)")
 args = parser.parse_args()
+
+
+# Ensure debug mode forces no-download
+if args.debug:
+    args.no_download = True  # Debug mode should not download files
+    print("🛠️ Debugging mode enabled. Downloads are disabled.")
+    logging.info("Debugging mode enabled. Downloads are disabled.")
 
 # Get username & password securely
 USERNAME = input("Enter your JLab username: ")
@@ -37,10 +55,10 @@ form_build_input = soup.find("input", {"name": "form_build_id"})
 form_build_id = form_build_input["value"] if form_build_input else None
 
 # Debugging
-if form_build_id:
-    print(f"🔹 Extracted form_build_id: {form_build_id}")
-else:
-    print("⚠️ No form_build_id found. Login may fail.")
+if args.debug and form_build_id:
+    logging.debug(f"🔹 Extracted form_build_id: {form_build_id}")
+elif args.debug:
+    logging.warning("⚠️ No form_build_id found. Login may fail.")
 
 # Step 2: Define login payload
 login_payload = {
@@ -83,11 +101,11 @@ form_build_id = form_build_input["value"] if form_build_input else None
 form_token = form_token_input["value"] if form_token_input else None
 
 # Debugging
-if form_build_id and form_token:
-    print(f"🔹 Extracted search form_build_id: {form_build_id}")
-    print(f"🔹 Extracted search form_token: {form_token}")
-else:
-    print("⚠️ No form_build_id or form_token found for search. Search may fail.")
+if args.debug and form_build_id and form_token:
+    logging.debug(f"🔹 Extracted search form_build_id: {form_build_id}")
+    logging.debug(f"🔹 Extracted search form_token: {form_token}")
+elif args.debug:
+    logging.warning("⚠️ No form_build_id or form_token found for search. Search may fail.")
     exit()
 
 # Step 6: Define search payload
@@ -138,103 +156,97 @@ if search_response.ok:
     else:
         print("\n".join([f"📄 Log Entry: {entry.text.strip()} - {BASE_URL}{entry['href']}" for entry in entries[:10]]))
 
-    # Step 9: Extract & Download Metadata Files
-# Directory where all metadata folders will be stored
-base_metadata_dir = "metadata_files"
+# Step 9: Extract & Download Metadata Files
+base_metadata_dir = "metadata"
 os.makedirs(base_metadata_dir, exist_ok=True)
 
-import os
-import re
-import requests
-import urllib.parse
-from bs4 import BeautifulSoup
+if args.no_download:
+    print("🚫 Downloading stage skipped due to --no-download or --debug flag.")
+    logging.info("Skipping file downloads.")
+else:
+    page = 0  # Start at the first page
+    while True:  # Loop until no more pages exist
+        if args.debug:
+            logging.debug(f"🔹 Fetching page {page}...")
 
-# Set base directory for metadata files
-base_metadata_dir = "metadata_files"
-os.makedirs(base_metadata_dir, exist_ok=True)
+        # Update search payload with pagination
+        search_payload["page"] = page  # Add the page parameter
 
-page = 0  # Start at the first page
-while True:  # Loop until no more pages exist
-    print(f"🔹 Fetching page {page}...")
+        # Encode URL with updated pagination
+        encoded_search_url = f"https://logbooks.jlab.org/entries?{urllib.parse.urlencode(search_payload)}"
 
-    # Update search payload with pagination
-    search_payload["page"] = page  # Add the page parameter
+        # Send paginated search request
+        search_response = session.get(encoded_search_url, headers=headers)
 
-    # Encode URL with updated pagination
-    encoded_search_url = f"https://logbooks.jlab.org/entries?{urllib.parse.urlencode(search_payload)}"
+        # Check for a valid response
+        if not search_response.ok:
+            print(f"❌ Failed to fetch page {page}. Stopping pagination.")
+            break  # Exit the loop if the request fails
 
-    # Send paginated search request
-    search_response = session.get(encoded_search_url, headers=headers)
+        search_soup = BeautifulSoup(search_response.text, "html.parser")
 
-    # Check for a valid response
-    if not search_response.ok:
-        print(f"❌ Failed to fetch page {page}. Stopping pagination.")
-        break  # Exit the loop if the request fails
+        # Extract log entry titles and links
+        entries = search_soup.select("a[href^='/entry/']")
+        if not entries:
+            print("✅ No more entries to process. Pagination complete.")
+            break  # Stop if there are no more entries
 
-    search_soup = BeautifulSoup(search_response.text, "html.parser")
+        print(f"🔹 Found {len(entries)} results on page {page}")
 
-    # Extract log entry titles and links
-    entries = search_soup.select("a[href^='/entry/']")
-    if not entries:
-        print("✅ No more entries to process. Pagination complete.")
-        break  # Stop if there are no more entries
+        for index, entry in enumerate(entries, start=1):
+            entry_title = entry.text.strip()
+            entry_url = urllib.parse.urljoin(BASE_URL, entry["href"])
+            print(f"🔹 Processing entry {index}/{len(entries)} on page {page}: {entry_title}")
 
-    print(f"🔹 Found {len(entries)} results on page {page}")
+            # Extract run number using regex
+            match = re.search(r"Start_Run_(\d+)", entry_title)
+            run_number = match.group(1) if match else None
 
-    for index, entry in enumerate(entries, start=1):
-        entry_title = entry.text.strip()
-        entry_url = urllib.parse.urljoin(BASE_URL, entry["href"])
-        print(f"🔹 Processing entry {index}/{len(entries)} on page {page}: {entry_title}")
+            if not run_number:
+                print(f"⚠️ Skipping entry {entry_title} (Run number not found)")
+                continue  # Skip if no run number is detected
 
-        # Extract run number using regex
-        match = re.search(r"Start_Run_(\d+)", entry_title)
-        run_number = match.group(1) if match else None
+            # Create a folder for this run number
+            run_folder = os.path.join(base_metadata_dir, f"COIN_NPS_Start_Run_{run_number}")
+            os.makedirs(run_folder, exist_ok=True)
 
-        if not run_number:
-            print(f"⚠️ Skipping entry {entry_title} (Run number not found)")
-            continue  # Skip if no run number is detected
+            # Fetch log entry page
+            entry_page = session.get(entry_url)
+            entry_soup = BeautifulSoup(entry_page.text, "html.parser")
 
-        # Create a folder for this run number
-        run_folder = os.path.join(base_metadata_dir, f"COIN_NPS_Start_Run_{run_number}")
-        os.makedirs(run_folder, exist_ok=True)
+            # Find metadata files (.dat and .results)
+            file_links = entry_soup.select("a[href$='.dat'], a[href$='.results']")
+            if not file_links:
+                print(f"⚠️ No metadata files found for Run {run_number}. Skipping download.")
+                continue  # Skip if no files are found
 
-        # Fetch log entry page
-        entry_page = session.get(entry_url)
-        entry_soup = BeautifulSoup(entry_page.text, "html.parser")
+            for file_link in file_links:
+                file_href = file_link["href"]  # Extract relative file path
+                file_url = urllib.parse.urljoin(BASE_URL, file_href)  # Ensure full URL
+                file_name = file_url.split("/")[-1]  # Extract filename
 
-        # Find metadata files (.dat and .results)
-        file_links = entry_soup.select("a[href$='.dat'], a[href$='.results']")
-        if not file_links:
-            print(f"⚠️ No metadata files found for Run {run_number}. Skipping download.")
-            continue  # Skip if no files are found
+                print(f"📥 Downloading: {file_name} from {file_url}")
 
-        for file_link in file_links:
-            file_href = file_link["href"]  # Extract relative file path
-            file_url = urllib.parse.urljoin(BASE_URL, file_href)  # Ensure full URL
-            file_name = file_url.split("/")[-1]  # Extract filename
-
-            print(f"📥 Downloading: {file_name} from {file_url}")
-
-            # Download the file
-            file_response = session.get(file_url, stream=True)
-            if file_response.status_code == 200:
-                file_path = os.path.join(run_folder, file_name)  # Save inside run folder
-                with open(file_path, "wb") as file:
-                    for chunk in file_response.iter_content(chunk_size=8192):
-                        file.write(chunk)
-                print(f"✅ Saved: {file_path}")
-            else:
-                print(f"❌ Failed to download {file_name}")
+                # Download the file
+                file_response = session.get(file_url, stream=True)
+                if file_response.status_code == 200:
+                    file_path = os.path.join(run_folder, file_name)  # Save inside run folder
+                    with open(file_path, "wb") as file:
+                        for chunk in file_response.iter_content(chunk_size=8192):
+                            file.write(chunk)
+                    print(f"✅ Saved: {file_path}")
+                else:
+                    print(f"❌ Failed to download {file_name}")
 
     # Move to the next page
     page += 1
 
-else:
-    print("❌ Search failed! Server response:")
-    print(f"🔹 Final Response URL: {search_response.url}")
-    print(search_response.text[:1000])
-
-# Step 10: Elapsed time
-end_time = time.time()
-elapsed_time = end_time - start_time
-print(f"⏱️ Script execution time: {elapsed_time:.2f} seconds")
+#if total_processed == 0:
+#    print("❌ Search failed! Possibly no valid results found. Server response:")
+if args.debug:
+    logging.debug(f"🔹 Final Response URL: {search_response.url}")
+    logging.debug(search_response.text[:1000])
+    # Elapsed time
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    logging.info(f"⏱️ Script execution time: {elapsed_time:.2f} seconds")
