@@ -25,19 +25,53 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S"
 )
 
+# Load settings from a JSON file
+def load_settings(filename="settings.json"):
+    """Loads filtering rules and default parameters from a settings file."""
+    try:
+        with open(filename, "r") as file:
+            return json.load(file)
+    except FileNotFoundError:
+        print(f"⚠️ Settings file '{filename}' not found. Using default values.")
+        return {}  # Return empty dictionary if file is missing
+    except json.JSONDecodeError:
+        print(f"❌ Error reading '{filename}'. Please check JSON formatting.")
+        exit(1)
+
+settings = load_settings()
+
 # Parse command-line arguments
-parser = argparse.ArgumentParser()
+parser = argparse.ArgumentParser("JLab Logbook Webscraper - Search and download logbook entries.")
 parser.add_argument("--quiet", action="store_true", help="Suppress terminal output and save results to a file only")
 parser.add_argument("--no-download", action="store_true", help="Skip file downloads")
 parser.add_argument("--debug", action="store_true", help="Enable debugging mode (includes detailed output and disables downloads)")
-args = parser.parse_args()
+parser.add_argument("--filter", action="store_true", help="Enable filtering of search results based on settings.json")
 
+parser.add_argument("--start-date", type=str, default="2023-09-01", help="Start date (YYYY-MM-DD)")
+parser.add_argument("--end-date", type=str, default="2024-06-01", help="End date (YYYY-MM-DD)")
+parser.add_argument("--logbook", type=str, default="84", help="Logbook ID to search (Default: 84)")
+parser.add_argument("--search", type=str, default="COIN_NPS Start_Run_", help="Search keyword (Default: 'COIN_NPS Start_Run_')")
+
+args = parser.parse_args()
 
 # Ensure debug mode forces no-download
 if args.debug:
     args.no_download = True  # Debug mode should not download files
     print("🛠️ Debugging mode enabled. Downloads are disabled.")
     logging.info("Debugging mode enabled. Downloads are disabled.")
+
+# Ensure dates are properly formatted
+def validate_date(date_str):
+    """Validates and formats the input date string."""
+    try:
+        datetime.strptime(date_str, "%Y-%m-%d")  # Check format
+        return f"{date_str} 00:00"  # Convert to required format
+    except ValueError:
+        print(f"❌ Invalid date format: {date_str}. Use YYYY-MM-DD.")
+        exit(1)  # Stop execution if date is invalid
+
+start_date = validate_date(args.start_date)
+end_date = validate_date(args.end_date)
 
 # Get username & password securely
 USERNAME = input("Enter your JLab username: ")
@@ -110,10 +144,10 @@ elif args.debug:
 
 # Step 6: Define search payload
 search_payload = {
-    "start_date": "2023-09-01 00:00",
-    "end_date": "2024-06-01 00:00",
-    "logbooks[0]": "84",  
-    "search_str": "COIN_NPS Start_Run_",  
+    "start_date": start_date,
+    "end_date": end_date,
+    "logbooks[0]": args.logbook,  
+    "search_str": args.search,
     "group_by": "SHIFT",
     "listing_format": "table",
     "entries_per_page": "100",
@@ -122,7 +156,6 @@ search_payload = {
     "form_id": "elog_form_advanced_filters",
     "op": "Submit"
 }
-
 # Encode the parameters correctly for a GET request
 encoded_search_url = f"https://logbooks.jlab.org/entries?{urllib.parse.urlencode(search_payload)}"
 
@@ -143,8 +176,44 @@ if search_response.ok:
         print("✅ All entries processed successfully! No more results to fetch.")
         exit()  # Exit cleanly
 
-    print(f"🔹 Found {len(entries)} results")
+   # Load filtering settings from settings.json
+    search_pattern = re.compile(settings.get("search_pattern", r"COIN_NPS Start_Run_\\d+"))
+    exclude_keywords = settings.get("exclude_keywords", [])
+
+    # If --filter is set, apply filtering; otherwise, keep all results
+    if args.filter:
+        print("✅ Filtering enabled. Applying search pattern and keyword exclusions.")
     
+        # Apply regex filtering (only keep entries that match the expected pattern)
+        filtered_entries = [entry for entry in entries if search_pattern.search(entry.text.strip())]
+
+        # Apply keyword exclusion (remove entries with unwanted words)
+        filtered_entries = [entry for entry in filtered_entries
+                            if not any(exclude.lower() in entry.text.lower() for exclude in exclude_keywords)]
+
+        # Stop if no valid entries remain after filtering
+        if not filtered_entries:
+            print("⚠️ No entries matched the refined search criteria. Exiting.")
+            exit()
+    else:
+        print("⚠️ Filtering disabled. Processing all search results.")
+        filtered_entries = entries  # Use all results without filtering 
+        # Display a filtered preview of up to 5 results
+       
+    print("\n🔹 **Search Preview:**\n")
+    preview_count = min(10, len(filtered_entries))
+    for index, entry in enumerate(filtered_entries[:preview_count], start=1):
+        entry_title = entry.text.strip()
+        entry_url = urllib.parse.urljoin(BASE_URL, entry["href"])
+        print(f"{index}. 📄 {entry_title}")
+        print(f"   🔗 {entry_url}\n")
+
+    # Ask the user if they want to continue with the download
+    proceed = input("Do you want to proceed with downloading metadata files? (y/n): ").strip().lower()
+    if proceed != 'y':
+        print("🚫 Download canceled. Exiting script.")
+        exit()
+ 
     # Save all results to a file
     with open("logbook_results.txt", "w") as file:
         for entry in entries:
@@ -165,82 +234,90 @@ if args.no_download:
     logging.info("Skipping file downloads.")
 else:
     page = 0  # Start at the first page
-    while True:  # Loop until no more pages exist
-        if args.debug:
-            logging.debug(f"🔹 Fetching page {page}...")
+    max_pages = 100  # Prevent infinite loops
 
-        # Update search payload with pagination
-        search_payload["page"] = page  # Add the page parameter
+while page < max_pages:
+    print(f"🔹 Fetching page {page}...")
 
-        # Encode URL with updated pagination
-        encoded_search_url = f"https://logbooks.jlab.org/entries?{urllib.parse.urlencode(search_payload)}"
+    # Update search payload with pagination
+    search_payload["page"] = page  # Ensure the correct page number is requested
 
-        # Send paginated search request
-        search_response = session.get(encoded_search_url, headers=headers)
+    # Encode URL with updated pagination
+    encoded_search_url = f"https://logbooks.jlab.org/entries?{urllib.parse.urlencode(search_payload)}"
 
-        # Check for a valid response
-        if not search_response.ok:
-            print(f"❌ Failed to fetch page {page}. Stopping pagination.")
-            break  # Exit the loop if the request fails
+    # Send paginated search request
+    search_response = session.get(encoded_search_url, headers=headers)
 
-        search_soup = BeautifulSoup(search_response.text, "html.parser")
+    # Check for a valid response
+    if not search_response.ok:
+        print(f"❌ Failed to fetch page {page}. Stopping pagination.")
+        break  
 
-        # Extract log entry titles and links
-        entries = search_soup.select("a[href^='/entry/']")
-        if not entries:
-            print("✅ No more entries to process. Pagination complete.")
-            break  # Stop if there are no more entries
+    search_soup = BeautifulSoup(search_response.text, "html.parser")
 
-        print(f"🔹 Found {len(entries)} results on page {page}")
+    # Extract log entry titles and links
+    entries = search_soup.select("a[href^='/entry/']")
+    if not entries:
+        print("✅ No more entries to process. Pagination complete.")
+        break  # Stop if no more results
 
-        for index, entry in enumerate(entries, start=1):
-            entry_title = entry.text.strip()
-            entry_url = urllib.parse.urljoin(BASE_URL, entry["href"])
-            print(f"🔹 Processing entry {index}/{len(entries)} on page {page}: {entry_title}")
+    print(f"🔹 Found {len(entries)} results on page {page}")
 
-            # Extract run number using regex
-            match = re.search(r"Start_Run_(\d+)", entry_title)
-            run_number = match.group(1) if match else None
+    for index, entry in enumerate(entries, start=1):
+        entry_title = entry.text.strip()
+        entry_url = urllib.parse.urljoin(BASE_URL, entry["href"])
+        print(f"🔹 Processing entry {index + (page * 100)}: {entry_title}")
 
-            if not run_number:
-                print(f"⚠️ Skipping entry {entry_title} (Run number not found)")
-                continue  # Skip if no run number is detected
+        # Extract run number using regex
+        match = re.search(r"50k replay plots for run (\d+)", entry_title, re.IGNORECASE)
+        run_number = match.group(1) if match else None
 
-            # Create a folder for this run number
-            run_folder = os.path.join(base_metadata_dir, f"COIN_NPS_Start_Run_{run_number}")
-            os.makedirs(run_folder, exist_ok=True)
+        if not run_number:
+            print(f"⚠️ Skipping entry {entry_title} (Run number not found)")
+            continue  # Skip if no run number is detected
 
-            # Fetch log entry page
-            entry_page = session.get(entry_url)
-            entry_soup = BeautifulSoup(entry_page.text, "html.parser")
+        # Create a folder for this run number
+        run_folder_name = settings.get("output_folder_format", "COIN_NPS_50k_replay_{run_number}")
+        run_folder = os.path.join(base_metadata_dir, run_folder_name.format(run_number=run_number))
+        os.makedirs(run_folder, exist_ok=True)
 
-            # Find metadata files (.dat and .results)
-            file_links = entry_soup.select("a[href$='.dat'], a[href$='.results']")
-            if not file_links:
-                print(f"⚠️ No metadata files found for Run {run_number}. Skipping download.")
-                continue  # Skip if no files are found
+        # Fetch log entry page
+        entry_page = session.get(entry_url)
+        entry_soup = BeautifulSoup(entry_page.text, "html.parser")
 
-            for file_link in file_links:
-                file_href = file_link["href"]  # Extract relative file path
-                file_url = urllib.parse.urljoin(BASE_URL, file_href)  # Ensure full URL
-                file_name = file_url.split("/")[-1]  # Extract filename
+        # Load file types from settings.json
+        file_types = settings.get("file_types", [".dat"])  # Default to .dat if missing
 
-                print(f"📥 Downloading: {file_name} from {file_url}")
+        # Create a selector for all file types
+        file_selectors = ",".join([f"a[href$='{ext}']" for ext in file_types])
 
-                # Download the file
-                file_response = session.get(file_url, stream=True)
-                if file_response.status_code == 200:
-                    file_path = os.path.join(run_folder, file_name)  # Save inside run folder
-                    with open(file_path, "wb") as file:
-                        for chunk in file_response.iter_content(chunk_size=8192):
-                            file.write(chunk)
-                    print(f"✅ Saved: {file_path}")
-                else:
-                    print(f"❌ Failed to download {file_name}")
+        # Find metadata files
+        file_links = entry_soup.select(file_selectors)
 
-    # Move to the next page
+        if not file_links:
+            print(f"⚠️ No metadata files found for Run {run_number}. Skipping download.")
+            continue  # Skip if no files are found
+
+        for file_link in file_links:
+            file_href = file_link["href"]  # Extract relative file path
+            file_url = urllib.parse.urljoin(BASE_URL, file_href)  # Ensure full URL
+            file_name = file_url.split("/")[-1]  # Extract filename
+
+            print(f"📥 Downloading: {file_name} from {file_url}")
+
+            # Download the file
+            file_response = session.get(file_url, stream=True)
+            if file_response.status_code == 200:
+                file_path = os.path.join(run_folder, file_name)  # Save inside run folder
+                with open(file_path, "wb") as file:
+                    for chunk in file_response.iter_content(chunk_size=8192):
+                        file.write(chunk)
+                print(f"✅ Saved: {file_path}")
+            else:
+                print(f"❌ Failed to download {file_name}")
+
+    # ✅ Move to the next page AFTER all processing
     page += 1
-
 #if total_processed == 0:
 #    print("❌ Search failed! Possibly no valid results found. Server response:")
 if args.debug:
