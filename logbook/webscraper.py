@@ -30,10 +30,12 @@ def load_settings(filename="settings.json"):
     """Loads filtering rules and default parameters from a settings file."""
     try:
         with open(filename, "r") as file:
-            return json.load(file)
+            settings = json.load(file)
+            logging.debug(f"✅ Loaded settings: {settings}")  # Log output
+            return settings
     except FileNotFoundError:
         print(f"⚠️ Settings file '{filename}' not found. Using default values.")
-        return {}  # Return empty dictionary if file is missing
+        return {}  
     except json.JSONDecodeError:
         print(f"❌ Error reading '{filename}'. Please check JSON formatting.")
         exit(1)
@@ -47,13 +49,32 @@ parser.add_argument("--no-download", action="store_true", help="Skip file downlo
 parser.add_argument("--debug", action="store_true", help="Enable debugging mode (includes detailed output and disables downloads)")
 parser.add_argument("--filter", action="store_true", help="Enable filtering of search results based on settings.json")
 
-parser.add_argument("--start-date", type=str, default="2023-09-01", help="Start date (YYYY-MM-DD)")
-parser.add_argument("--end-date", type=str, default="2024-06-01", help="End date (YYYY-MM-DD)")
-parser.add_argument("--logbook", type=str, default="84", help="Logbook ID to search (Default: 84)")
-parser.add_argument("--search", type=str, default="COIN_NPS Start_Run_", help="Search keyword (Default: 'COIN_NPS Start_Run_')")
+parser.add_argument("--start-date", type=str, default="", help="Start date (YYYY-MM-DD)")
+parser.add_argument("--end-date", type=str, default="", help="End date (YYYY-MM-DD)")
+parser.add_argument("--logbook", type=str, default="", help="Logbook ID to search (HCLOG: 84, NPS: 573)")
+parser.add_argument("--search", type=str, default="", help="Search keyword (Ex: 'COIN_NPS Start_Run_')")
 
 args = parser.parse_args()
 
+# Apply hierarchy: Flags > JSON > Default
+args.start_date = args.start_date.strip() or settings.get("start_date", "2023-09-01")
+args.end_date = args.end_date.strip() or settings.get("end_date", "2024-06-01")
+args.logbook = args.logbook.strip() or settings.get("logbook", "84")
+args.search = args.search.strip() or settings.get("search_string", "COIN_NPS Start_Run_")
+
+# Debugging Output
+print(f"🔍 Final search parameters:")
+print(f"   📅 Start Date: {args.start_date}")
+print(f"   📅 End Date: {args.end_date}")
+print(f"   📓 Logbook: {args.logbook}")
+print(f"   🔍 Search String: {args.search}")
+
+logging.debug(f"🔍 Using search parameters: start_date={args.start_date}, end_date={args.end_date}, logbook={args.logbook}, search={args.search}")
+
+# If the user did not manually specify a search term, override it with settings.json
+if not args.search.strip():  # Catch empty strings
+    args.search = settings.get("search_string", "COIN_NPS Start_Run_")
+   
 # Ensure debug mode forces no-download
 if args.debug:
     args.no_download = True  # Debug mode should not download files
@@ -158,6 +179,7 @@ search_payload = {
 }
 # Encode the parameters correctly for a GET request
 encoded_search_url = f"https://logbooks.jlab.org/entries?{urllib.parse.urlencode(search_payload)}"
+logging.debug(f"🔎 Search Payload: {search_payload}")
 
 # Step 7: Send the search request
 search_response = session.get(encoded_search_url, headers=headers)
@@ -177,7 +199,7 @@ if search_response.ok:
         exit()  # Exit cleanly
 
    # Load filtering settings from settings.json
-    search_pattern = re.compile(settings.get("search_pattern", r"COIN_NPS Start_Run_\\d+"))
+    search_pattern = re.compile(settings.get("search_pattern", r"NPS: END of run\\d+"))
     exclude_keywords = settings.get("exclude_keywords", [])
 
     # If --filter is set, apply filtering; otherwise, keep all results
@@ -269,7 +291,7 @@ while page < max_pages:
         print(f"🔹 Processing entry {index + (page * 100)}: {entry_title}")
 
         # Extract run number using regex
-        match = re.search(r"50k replay plots for run (\d+)", entry_title, re.IGNORECASE)
+        match = re.search(r"NPS: END of run (\d+)", entry_title, re.IGNORECASE)
         run_number = match.group(1) if match else None
 
         if not run_number:
@@ -277,7 +299,7 @@ while page < max_pages:
             continue  # Skip if no run number is detected
 
         # Create a folder for this run number
-        run_folder_name = settings.get("output_folder_format", "COIN_NPS_50k_replay_{run_number}")
+        run_folder_name = settings.get("output_folder_format", "NPS_END_of_run_{run_number}")
         run_folder = os.path.join(base_metadata_dir, run_folder_name.format(run_number=run_number))
         os.makedirs(run_folder, exist_ok=True)
 
