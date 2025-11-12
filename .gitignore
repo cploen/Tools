@@ -2,3 +2,13 @@ logbook/metadata
 logbook/debug.log
 logbook/logbook_results.txt
 countHistograms.C
+
+file_convert/error_log.txt
+file_convert/fastPNG_runnum.py
+file_convert/filenames/
+list_files.py
+mv_fast.py
+pageCounter.py
+tar_multiprocess.sh
+tar_process.log
+datasearch2.py
