@@ -14,9 +14,6 @@ This repo contains some tools to speed things up:
 	- json file contains search payload and output folder name.  Edit this and you can just run the script and go.
 	- command line search terms: Overrides json file, let's you play around with your parameters without having to open/edit/save the json.
 	- --filtering flag: this provides the strict search unavailable (as far as I can tell) from the logbook site.  It will match only the exact search string.  At least, that's the idea - I'm still testing it.
-
-4. elog-scraper/elog.py
-        We needed an organized  way to archive the elogs for our experiments.  This script authenticates securely and uses BeautifulSoup to parse the html.  It handles pagination cleanly and only downloads new entries.  The entries are saved to folders named by metadata and a subject slug, and the attachments, text, and metadata are downloaded and organized cleanly. See the readme in the folder for more instruction.  
 So, 
 --filtering: most strict
 - command line search terms: overrides json file
@@ -24,3 +21,8 @@ So,
 
 Default behavior:
 - settings set for Hall C logbook, NPS run period.  I don't have a list of the codes for the other logbooks, but you can use the developer tools on the website to figure it out and then just edit settings.json.
+
+4. elog-scraper/elog.py
+        We needed an organized  way to archive the elogs for our experiments.  This script authenticates securely and uses BeautifulSoup to parse the html.  It handles pagination cleanly and only downloads new entries.  The entries are saved to folders named by metadata and a subject slug, and the attachments, text, and metadata are downloaded and organized cleanly. See the readme in the folder for more instruction.  
+
+		However, you must use this on a JLab computer, like ifarm.  I can't satisfy the Cloudfare security challenge programmatically.
